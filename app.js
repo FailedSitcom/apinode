@@ -7,6 +7,11 @@ var jsonParser = require("body-parser").json;
 var logger = require("morgan");
 var dateFormat = require('dateformat');
 
+var zendeskUrl   = process.env.zendeskUrl;
+var zendeskEmail = process.env.zendeskEmail;
+var zendeskToken = process.env.zendeskToken;
+var pipedriveKey = process.env.pipedriveKey;
+
 var Zendesk = require('zendesk-node-api');
 var zendesk = new Zendesk({
   url: zendeskUrl,
