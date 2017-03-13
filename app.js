@@ -31,7 +31,7 @@ app.use(logger("dev"));
 //    }
 //});
 
-zendesk.search.list('query=type:ticket status:new status:open created:>1hours').then(function(results){
+zendesk.search.list('query=type:ticket status:new status:open').then(function(results){
     results.forEach(function(result) {
         console.log("Zendesk Ticket created at " + dateFormat(result.created_at, "dddd, mmmm dS, yyyy, h:MM:ss TT"));
         console.log(result.subject);
