@@ -3,30 +3,22 @@
 var express = require("express");
 var app = express();
 
-var jsonParser = require("body-parser").json;
-var logger = require("morgan");
 var dateFormat = require('dateformat');
+var Pipedrive = require('pipedrive');
+var Zendesk = require('zendesk-node-api');
 
 var zendeskUrl   = process.env.zendeskUrl;
-console.log(process.env.zendeskUrl);
 var zendeskEmail = process.env.zendeskEmail;
-console.log(process.env.zendeskEmail);
 var zendeskToken = process.env.zendeskToken;
-console.log(process.env.zendeskToken);
 var pipedriveKey = process.env.pipedriveKey;
-console.log(process.env.pipedriveKey);
 
-var Zendesk = require('zendesk-node-api');
 var zendesk = new Zendesk({
   url: zendeskUrl,
   email: zendeskEmail,
   token: zendeskToken
 });
 
-var Pipedrive = require('pipedrive');
-var pipedrive = new Pipedrive.Client(pipedriveKey, { strictMode: true });
-
-app.use(logger("dev"));
+// var pipedrive = new Pipedrive.Client(pipedriveKey, { strictMode: true });
 
 //pipedrive.Notes.getAll({}, function(err, notes) {
 //    if (err) throw err;
@@ -34,6 +26,8 @@ app.use(logger("dev"));
 //        console.log(notes[i].org_id);
 //    }
 //});
+
+console.log(zendesk);
 
 zendesk.search.list('query=type:ticket status:new status:open').then(function(results){
     results.forEach(function(result) {
