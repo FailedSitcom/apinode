@@ -27,9 +27,8 @@ var zendesk = new Zendesk({
 //    }
 //});
 
-console.log(zendesk);
-
 zendesk.search.list('query=type:ticket status:new status:open').then(function(results){
+    console.log(results);
     results.forEach(function(result) {
         console.log("Zendesk Ticket created at " + dateFormat(result.created_at, "dddd, mmmm dS, yyyy, h:MM:ss TT"));
         console.log(result.subject);
