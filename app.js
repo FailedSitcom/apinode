@@ -8,9 +8,13 @@ var Pipedrive = require('pipedrive');
 var Zendesk = require('zendesk-node-api');
 
 var zendeskUrl   = process.env.zendeskUrl;
+console.log(process.env.zendeskUrl);
 var zendeskEmail = process.env.zendeskEmail;
+console.log(process.env.zendeskEmail);
 var zendeskToken = process.env.zendeskToken;
+console.log(process.env.zendeskToken);
 var pipedriveKey = process.env.pipedriveKey;
+console.log(process.env.pipedriveKey);
 
 var zendesk = new Zendesk({
   url: zendeskUrl,
@@ -27,8 +31,9 @@ var zendesk = new Zendesk({
 //    }
 //});
 
+console.log(zendesk.search.list('query=type:ticket status:new status:open'));
+
 zendesk.search.list('query=type:ticket status:new status:open').then(function(results){
-    console.log(results);
     results.forEach(function(result) {
         console.log("Zendesk Ticket created at " + dateFormat(result.created_at, "dddd, mmmm dS, yyyy, h:MM:ss TT"));
         console.log(result.subject);
