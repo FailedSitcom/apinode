@@ -8,9 +8,13 @@ var logger = require("morgan");
 var dateFormat = require('dateformat');
 
 var zendeskUrl   = process.env.zendeskUrl;
+console.log(process.env.zendeskUrl);
 var zendeskEmail = process.env.zendeskEmail;
+console.log(process.env.zendeskEmail);
 var zendeskToken = process.env.zendeskToken;
+console.log(process.env.zendeskToken);
 var pipedriveKey = process.env.pipedriveKey;
+console.log(process.env.pipedriveKey);
 
 var Zendesk = require('zendesk-node-api');
 var zendesk = new Zendesk({
