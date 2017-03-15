@@ -27,16 +27,16 @@ var zendesk = new Zendesk({
 //    }
 //});
 
-setTimeout(zendeskSearch, 1000);
-
 function zendeskSearch() {
-  zendesk.search.list('query=type:ticket status:new status:open').then(function(results){
+  zendesk.search.list('query=type:ticket status:new status:open created>2017-01-01').then(function(results){
       results.forEach(function(result) {
           console.log("Zendesk Ticket created at " + dateFormat(result.created_at, "dddd, mmmm dS, yyyy, h:MM:ss TT"));
           console.log(result.subject);
       });
   });
 }
+
+zendeskSearch();
 
 var port = process.env.PORT || 3000;
 
