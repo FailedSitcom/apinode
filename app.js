@@ -12,6 +12,10 @@ var zendeskEmail = process.env.zendeskEmail;
 var zendeskToken = process.env.zendeskToken;
 var pipedriveKey = process.env.pipedriveKey;
 
+app.get('/', function(request, response) {
+  response.render('pages/index');
+});
+
 app.set('port', (process.env.PORT || 5000));
 
 app.listen(app.get('port'), function() {
