@@ -5,7 +5,7 @@ var dateFormat = require('dateformat');
 var Pipedrive = require('pipedrive');
 var Zendesk = require('zendesk-node-api');
 
-var zendeskUrl   = process.env.ZENDESKURL;
+var zendeskUrl = process.env.ZENDESKURL;
 var zendeskEmail = process.env.ZENDESKEMAIL;
 var zendeskToken = process.env.ZENDESKTOKEN;
 var pipedriveKey = process.env.PIPEDRIVEKEY;
@@ -21,9 +21,8 @@ var pipedrive = new Pipedrive.Client(pipedriveKey, {
 });
 
 function zendeskSearch() {
-    zendesk.search.list('query=type:ticket status:new status:open created>24hours').then(function(results) {
+    zendesk.search.list('query=type:ticket status:new status:open created>1hour').then(function(results) {
         results.forEach(function(result) {
-
             pipedrive.Organizations.find({
                 term: result.custom_fields[0].value
             }, function(err, organization) {
@@ -72,7 +71,25 @@ function zendeskSearch() {
                                 }
                             });
                         } else {
-                            console.log("undefined");
+                            if (result.subject.indexOf('[TEST]') == -1) {
+                                if (result.subject.indexOf('New custom question was added') == -1) {
+                                    if (result.subject.indexOf('New registration') == -1) {
+                                        if (result.subject.indexOf('Question of the Week Results') == -1) {
+                                            if (result.subject.indexOf('Ergebnisse der Frage der Woche') == -1) {
+                                                pipedrive.Notes.add({
+                                                        person_id: 7002,
+                                                        content: "Zendesk Ticket created at " + dateFormat(result.created_at, "dddd, mmmm dS, yyyy, h:MM:ss TT") +
+                                                            " ---- " + result.subject
+                                                    },
+                                                    function(addErr, addData) {
+                                                        if (addErr) throw addErr;
+                                                        console.log('Note successfully added', addData);
+                                                    });
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     });
                 }
