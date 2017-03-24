@@ -47,12 +47,11 @@ function zendeskSearch() {
                         }
                     });
                 });
-            } else {
+            } else if ((typeof result.via.source.from.address !== 'undefined') && (result.via.source.from.address.indexOf('@teambay.com') == -1)) {
                 pipedrive.Persons.find({
                         term: result.via.source.from.address
                     }, function(err, person) {
                         if (err) throw err;
-                        if (person.length > 0) {
                             person[0].getDeals(function(dealsErr, deals) {
                                 if (dealsErr) throw dealsErr;
                                 if (result.subject.indexOf('[TEST]') == -1) {
@@ -71,30 +70,30 @@ function zendeskSearch() {
                                     }
                                 }
                             });
-                        } else {
-                            if (result.subject.indexOf('[TEST]') == -1) {
-                                if (result.subject.indexOf('New custom question was added') == -1) {
-                                    if (result.subject.indexOf('New registration') == -1) {
-                                        if (result.subject.indexOf('Question of the Week Results') == -1) {
-                                            if (result.subject.indexOf('Ergebnisse der Frage der Woche') == -1) {
-                                                pipedrive.Notes.add({
-                                                        person_id: 7002,
-                                                        content: "Zendesk Ticket created at " + dateFormat(result.created_at, "dddd, mmmm dS, yyyy, h:MM:ss TT") +
-                                                            " ---- " + result.subject
-                                                    },
-                                                    function(addErr, addData) {
-                                                        if (addErr) throw addErr;
-                                                        console.log('Note successfully added', addData);
-                                                    });
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+
                     }
                 );
-            }
+            } else {
+               if (result.subject.indexOf('[TEST]') == -1) {
+                   if (result.subject.indexOf('New custom question was added') == -1) {
+                       if (result.subject.indexOf('New registration') == -1) {
+                           if (result.subject.indexOf('Question of the Week Results') == -1) {
+                               if (result.subject.indexOf('Ergebnisse der Frage der Woche') == -1) {
+                                   pipedrive.Notes.add({
+                                           person_id: 7002,
+                                           content: "Zendesk Ticket created at " + dateFormat(result.created_at, "dddd, mmmm dS, yyyy, h:MM:ss TT") +
+                                               " ---- " + result.subject
+                                       },
+                                       function(addErr, addData) {
+                                           if (addErr) throw addErr;
+                                           console.log('Note successfully added', addData);
+                                       });
+                               }
+                           }
+                       }
+                   }
+               }
+           }
         });
     });
 }
