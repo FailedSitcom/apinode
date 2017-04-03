@@ -21,18 +21,20 @@ var pipedrive = new Pipedrive.Client(pipedriveKey, {
 });
 
 function zendeskSearch() {
-    zendesk.search.list('query=type:ticket created>1hour').then(function(results) {
+    zendesk.search.list('query=type:ticket created>7days').then(function(results) {
         results.forEach(function(result) {
             if (result.custom_fields[0].value !== null) {
                 pipedrive.Organizations.find({
                     term: result.custom_fields[0].value
                 }, function(err, organization) {
                     if (err) throw err;
+                    console.log(organization.name);
                     organization[0].getDeals(function(dealsErr, deals) {
                         if (dealsErr) throw dealsErr;
                         if (result.subject.indexOf('[TEST]') == -1) {
                             if (result.subject.indexOf('New custom question was added') == -1) {
                                 if (result.subject.indexOf('New registration') == -1) {
+                                  console.log("company found");
                                     // pipedrive.Notes.add({
                                     //         deal_id: deals[0].id,
                                     //         content: "Zendesk Ticket created at " + dateFormat(result.created_at, "dddd, mmmm dS, yyyy, h:MM:ss TT") +
@@ -49,29 +51,30 @@ function zendeskSearch() {
                 });
             } else if ((typeof result.via.source.from.address !== 'undefined') && (result.via.source.from.address.indexOf('@teambay.com') == -1)) {
                 pipedrive.Persons.find({
-                        term: result.via.source.from.address
-                    }, function(err, person) {
-                        if (err) throw err;
-                            person[0].getDeals(function(dealsErr, deals) {
-                                if (dealsErr) throw dealsErr;
-                                if (result.subject.indexOf('[TEST]') == -1) {
-                                    if (result.subject.indexOf('New custom question was added') == -1) {
-                                        if (result.subject.indexOf('New registration') == -1) {
-                                            pipedrive.Notes.add({
-                                                    deal_id: deals[0].id,
-                                                    content: "Zendesk Ticket created at " + dateFormat(result.created_at, "dddd, mmmm dS, yyyy, h:MM:ss TT") +
-                                                        " ---- " + result.subject
-                                                },
-                                                function(addErr, addData) {
-                                                    if (addErr) throw addErr;
-                                                    console.log('Note successfully added', addData);
-                                                });
-                                        }
-                                    }
+                      term: result.via.source.from.address
+                }, function(err, person) {
+                    if (err) throw err;
+                    console.log(person);
+                    person.getDeals(function(dealsErr, deals) {
+                        if (dealsErr) throw dealsErr;
+                        if (result.subject.indexOf('[TEST]') == -1) {
+                            if (result.subject.indexOf('New custom question was added') == -1) {
+                                if (result.subject.indexOf('New registration') == -1) {
+                                  console.log("person found");
+                                    // pipedrive.Notes.add({
+                                    //         deal_id: deals[0].id,
+                                    //         content: "Zendesk Ticket created at " + dateFormat(result.created_at, "dddd, mmmm dS, yyyy, h:MM:ss TT") +
+                                    //             " ---- " + result.subject
+                                    //     },
+                                    //     function(addErr, addData) {
+                                    //         if (addErr) throw addErr;
+                                    //         console.log('Note successfully added', addData);
+                                    //     });
                                 }
-                            });
-
-                    }
+                            }
+                        }
+                    });
+                  }
                 );
             } else {
                if (result.subject.indexOf('[TEST]') == -1) {
@@ -79,15 +82,16 @@ function zendeskSearch() {
                        if (result.subject.indexOf('New registration') == -1) {
                            if (result.subject.indexOf('Question of the Week Results') == -1) {
                                if (result.subject.indexOf('Ergebnisse der Frage der Woche') == -1) {
-                                   pipedrive.Notes.add({
-                                           person_id: 7002,
-                                           content: "Zendesk Ticket created at " + dateFormat(result.created_at, "dddd, mmmm dS, yyyy, h:MM:ss TT") +
-                                               " ---- " + result.subject
-                                       },
-                                       function(addErr, addData) {
-                                           if (addErr) throw addErr;
-                                           console.log('Note successfully added', addData);
-                                       });
+                                 console.log("none of these");
+                                  //  pipedrive.Notes.add({
+                                  //          person_id: 7002,
+                                  //          content: "Zendesk Ticket created at " + dateFormat(result.created_at, "dddd, mmmm dS, yyyy, h:MM:ss TT") +
+                                  //              " ---- " + result.subject
+                                  //      },
+                                  //      function(addErr, addData) {
+                                  //          if (addErr) throw addErr;
+                                  //          console.log('Note successfully added', addData);
+                                  //      });
                                }
                            }
                        }
